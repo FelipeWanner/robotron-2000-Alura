@@ -1,39 +1,8 @@
+import {pecas} from "../modules/Pecas.js"
+
 const controle = document.querySelectorAll("[data-controle]"); //seleciona todos os data attributes de nome
 //'controle' em um array
 const estatisticas = document.querySelectorAll("[data-estatistica]");
-const pecas = {
-  bracos: {
-    forca: 29,
-    poder: 35,
-    energia: -21,
-    velocidade: -5,
-  },
-
-  blindagem: {
-    forca: 41,
-    poder: 20,
-    energia: 0,
-    velocidade: -20,
-  },
-  nucleos: {
-    forca: 0,
-    poder: 7,
-    energia: 48,
-    velocidade: -24,
-  },
-  pernas: {
-    forca: 27,
-    poder: 21,
-    energia: -32,
-    velocidade: 42,
-  },
-  foguetes: {
-    forca: 0,
-    poder: 28,
-    energia: 0,
-    velocidade: -2,
-  },
-};
 
 controle.forEach((element) => {
   element.addEventListener("click", (evento) => {
@@ -51,8 +20,8 @@ controle.forEach((element) => {
     // As duas funções "manipulaDados" e "atualizaEstatisticas", manipulam o mesmo data-attribute "[data-contador]";
     // Elas são chamadas no mesmo evento de click, e na ordem em que são declaradas;
     // Quando se coloca a primero a função "manipulaDados", ela altera o valor em "-1" ou "+1" do "[data-attribute]", que é atribuída a constante "quantidadeDePecas";
-    // Veja no console.log nas linhas 61 e 74, a constante "contadorDePecas" é sempre uma valor maior ou menor do que a constante "peca";
-    // O que faz que quando entramos na condicional da linha linha 80 dentro da função "atualizaEstatisticas" ele já está com valor "0", por isso não faz a última subtração;
+    // Veja no console.log nas linhas 30 e 43, a constante "contadorDePecas" é sempre uma valor maior ou menor do que a constante "peca";
+    // O que faz que quando entramos na condicional da linha linha 49 dentro da função "atualizaEstatisticas" ele já está com valor "0", por isso não faz a última subtração;
     // Então a resolução é chamar a função "atualizaEstatistica" antes da função "manipulaDados", ou seja pelo menos uma linha acima
   });
 });
