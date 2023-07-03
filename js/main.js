@@ -1,70 +1,86 @@
-const controle = document.querySelectorAll("[data-controle]")   //seleciona todos os data attributes de nome 
-                                                                //'controle' em um array
-const estatisticas = document.querySelectorAll("[data-estatistica]")
+const controle = document.querySelectorAll("[data-controle]"); //seleciona todos os data attributes de nome
+//'controle' em um array
+const estatisticas = document.querySelectorAll("[data-estatistica]");
 const pecas = {
-    "bracos": {
-        "forca": 29,
-        "poder": 35,
-        "energia": -21,
-        "velocidade": -5
-    },
+  bracos: {
+    forca: 29,
+    poder: 35,
+    energia: -21,
+    velocidade: -5,
+  },
 
-    "blindagem": {
-        "forca": 41,
-        "poder": 20,
-        "energia": 0,
-        "velocidade": -20
-    },
-    "nucleos":{
-        "forca": 0,
-        "poder": 7,
-        "energia": 48,
-        "velocidade": -24
-    },
-    "pernas":{
-        "forca": 27,
-        "poder": 21,
-        "energia": -32,
-        "velocidade": 42
-    },
-    "foguetes":{
-        "forca": 0,
-        "poder": 28,
-        "energia": 0,
-        "velocidade": -2
-    }
-}
+  blindagem: {
+    forca: 41,
+    poder: 20,
+    energia: 0,
+    velocidade: -20,
+  },
+  nucleos: {
+    forca: 0,
+    poder: 7,
+    energia: 48,
+    velocidade: -24,
+  },
+  pernas: {
+    forca: 27,
+    poder: 21,
+    energia: -32,
+    velocidade: 42,
+  },
+  foguetes: {
+    forca: 0,
+    poder: 28,
+    energia: 0,
+    velocidade: -2,
+  },
+};
 
-controle.forEach(element => {
-    element.addEventListener("click", (evento) =>{
-        const operacao = evento.target.dataset.controle //atribuir + ou - na variavel operacao, 
-                                                        //dependendo de qual node for clicado.
-                                                        
-        manipulaDados(operacao, evento.target.parentNode) //chamado da funcao 'manipula dados' 
-                                                    // passando o value do 'data-controle' e o pai do 'data-controle'
-        atualizaEstatisticas(evento.target.dataset.peca, operacao)
-    })                                              
+controle.forEach((element) => {
+  element.addEventListener("click", (evento) => {
+    const operacao = evento.target.dataset.controle;
+    //atribuir + ou - na variavel operacao, dependendo de qual node for clicado.
+
+    const quantidadeDePecas = evento.target.parentNode.querySelector("[data-contador]");
+    //quantidadeDePecas encontra o elemento html responsavel por guardar o valor de pecas adicionadas ou subtraidas
+
+    atualizaEstatisticas(evento.target.dataset.peca, operacao, quantidadeDePecas);
+    manipulaDados(operacao, quantidadeDePecas); //chamado da funcao 'manipula dados' passando o value do 'data-controle' e o pai do 'data-controle'
+
+    //IMPORTANTE --- 'atualizaEstatisticas' deve vir antes de m'anipulaDados'
+
+    // As duas funções "manipulaDados" e "atualizaEstatisticas", manipulam o mesmo data-attribute "[data-contador]";
+    // Elas são chamadas no mesmo evento de click, e na ordem em que são declaradas;
+    // Quando se coloca a primero a função "manipulaDados", ela altera o valor em "-1" ou "+1" do "[data-attribute]", que é atribuída a constante "quantidadeDePecas";
+    // Veja no console.log nas linhas 61 e 74, a constante "contadorDePecas" é sempre uma valor maior ou menor do que a constante "peca";
+    // O que faz que quando entramos na condicional da linha linha 80 dentro da função "atualizaEstatisticas" ele já está com valor "0", por isso não faz a última subtração;
+    // Então a resolução é chamar a função "atualizaEstatistica" antes da função "manipulaDados", ou seja pelo menos uma linha acima
+  });
 });
 
-
-function manipulaDados(operacao, controle){
-    const peca = controle.querySelector("[data-contador]") //seleciona o 'data-contador' dentro pai de 'data-controle'
-    
-    if(operacao === "-"){
-        peca.value = parseInt(peca.value) - 1
+function manipulaDados(operacao, contadorDePecas) {
+  //console.log(contadorDePecas.value);
+  if (operacao === "-") {
+    if (contadorDePecas.value > 0) {
+      contadorDePecas.value = parseInt(contadorDePecas.value) - 1;
     } else {
-        peca.value = parseInt(peca.value) + 1
+      contadorDePecas.value = 0;
     }
+  } else {
+    contadorDePecas.value = parseInt(contadorDePecas.value) + 1;
+  }
 }
 
-function atualizaEstatisticas(peca, operacao){
-    if(operacao === "+"){
-        estatisticas.forEach((elemento)=>{
-            elemento.textContent = parseInt(elemento.textContent) + pecas[peca][elemento.dataset.estatistica]
-        })
-    } else {
-        estatisticas.forEach((elemento)=>{
-            elemento.textContent = parseInt(elemento.textContent) - pecas[peca][elemento.dataset.estatistica]
-        })
+function atualizaEstatisticas(peca, operacao, quantidadeDePecas) {
+  //console.log(quantidadeDePecas.value);
+  if (operacao === "+") {
+    estatisticas.forEach((elemento) => {
+      elemento.textContent = parseInt(elemento.textContent) + pecas[peca][elemento.dataset.estatistica];
+    });
+  } else {
+    if (quantidadeDePecas.value > 0) {
+      estatisticas.forEach((elemento) => {
+        elemento.textContent = parseInt(elemento.textContent) - pecas[peca][elemento.dataset.estatistica];
+      });
     }
+  }
 }
