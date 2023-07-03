@@ -97,6 +97,7 @@ main {
     padding: 5px;
     align-items: center;
     align-self: flex-end;
+    user-select: none;
 }
 
 .controle-contador {
